@@ -137,7 +137,7 @@ npx serve .
 - [x] Fully responsive (5 breakpoints)
 - [x] Local images (no CDN dependency)
 - [ ] Backend form submission (front-end only for now)
-- [ ] Google Maps embed on Contact page
+- [x] OpenStreetMap embed on Contact page (Okhla Industrial Area, New Delhi)
 
 ---
 
