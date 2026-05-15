@@ -1,24 +1,6 @@
-/* ============================================
-   Mangalam HDPE Pipes — Main JavaScript
-   ============================================
-
-   Sections:
-   1. Sticky Header
-   2. Mobile Nav Toggle (Hamburger)
-   3. Scroll Reveal Animations
-   4. Quote Modal (open / close / submit)
-   5. Smooth Scroll — "View Technical Specs"
-   6. Image Carousel
-   7. Image Zoom on Hover
-   8. Contact Page Form
-   9. Toast Notification Helper
-============================================ */
-
 document.addEventListener('DOMContentLoaded', () => {
 
-    /* ==========================================
-       1. Sticky Header
-       ========================================== */
+    // sticky header - show after scrolling past the main nav
     const stickyHeader = document.getElementById('sticky-header');
     const mainHeader   = document.querySelector('.main-header');
 
@@ -28,12 +10,10 @@ document.addEventListener('DOMContentLoaded', () => {
         stickyHeader.classList.toggle('visible', window.scrollY > threshold);
     }
     window.addEventListener('scroll', handleScroll, { passive: true });
-    handleScroll(); // run once on load
+    handleScroll();
 
 
-    /* ==========================================
-       2. Mobile Nav Toggle (Hamburger)
-       ========================================== */
+    // hamburger menu toggle
     const hamburgerBtn = document.getElementById('hamburger-btn');
     const mobileNav    = document.getElementById('mobile-nav');
 
@@ -41,13 +21,12 @@ document.addEventListener('DOMContentLoaded', () => {
         hamburgerBtn.addEventListener('click', () => {
             const isOpen = mobileNav.classList.toggle('open');
             hamburgerBtn.setAttribute('aria-expanded', isOpen);
-            // Swap icon
             hamburgerBtn.innerHTML = isOpen
                 ? '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M18 6L6 18M6 6l12 12"/></svg>'
                 : '<svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><path d="M4 6h16M4 12h16M4 18h16"/></svg>';
         });
 
-        // Close mobile nav when a link inside it is clicked
+        // close the menu when a link is clicked
         mobileNav.querySelectorAll('a, button').forEach(el => {
             el.addEventListener('click', () => {
                 mobileNav.classList.remove('open');
@@ -58,12 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* ==========================================
-       3. Scroll Reveal Animations
-       ========================================== */
+    // scroll reveal - fade in elements as they enter the viewport
     const revealEls = document.querySelectorAll('.animate-on-scroll');
 
-    // Immediately reveal elements that are already in view on page load
     function revealIfVisible(el) {
         const rect = el.getBoundingClientRect();
         if (rect.top < window.innerHeight * 0.92) {
@@ -89,9 +65,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 
-    /* ==========================================
-       4. Quote Modal
-       ========================================== */
+    // quote modal
     const modal         = document.getElementById('quote-modal');
     const openModalBtns = document.querySelectorAll('.trigger-quote-modal');
     const closeModalBtn = document.getElementById('close-modal');
@@ -101,7 +75,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!modal) return;
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
-        // Focus first input for accessibility
         const firstInput = modal.querySelector('input, textarea');
         if (firstInput) setTimeout(() => firstInput.focus(), 50);
     }
@@ -112,35 +85,29 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.style.overflow = '';
     }
 
-    // Open triggers
     openModalBtns.forEach(btn => btn.addEventListener('click', openModal));
 
-    // Close button
     if (closeModalBtn) closeModalBtn.addEventListener('click', closeModal);
 
-    // Click outside modal content
     if (modal) {
         modal.addEventListener('click', (e) => {
             if (e.target === modal) closeModal();
         });
     }
 
-    // Close on Escape key
+    // close on escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && modal && modal.classList.contains('open')) closeModal();
     });
 
-    // Quote form submit
     if (quoteForm) {
         quoteForm.addEventListener('submit', (e) => {
             e.preventDefault();
-
             const submitBtn = quoteForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.textContent;
             submitBtn.textContent = 'Sending…';
             submitBtn.disabled = true;
 
-            // Simulate a network call (replace with real fetch() in production)
             setTimeout(() => {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
@@ -152,11 +119,9 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* ==========================================
-       5. Smooth Scroll — "View Technical Specs"
-       ========================================== */
-    const viewSpecsBtn  = document.getElementById('view-specs-btn');
-    const specsSection  = document.getElementById('specs-section');
+    // smooth scroll to specs section
+    const viewSpecsBtn = document.getElementById('view-specs-btn');
+    const specsSection = document.getElementById('specs-section');
 
     if (viewSpecsBtn && specsSection) {
         viewSpecsBtn.addEventListener('click', () => {
@@ -165,29 +130,23 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* ==========================================
-       6. Image Carousel
-       ========================================== */
-    const mainImage   = document.getElementById('main-image');
-    const thumbEls    = document.querySelectorAll('.thumb');
-    const leftArrow   = document.querySelector('.left-arrow');
-    const rightArrow  = document.querySelector('.right-arrow');
-    const zoomResult  = document.getElementById('zoom-result');
+    // image carousel
+    const mainImage  = document.getElementById('main-image');
+    const thumbEls   = document.querySelectorAll('.thumb');
+    const leftArrow  = document.querySelector('.left-arrow');
+    const rightArrow = document.querySelector('.right-arrow');
+    const zoomResult = document.getElementById('zoom-result');
 
     if (mainImage && thumbEls.length > 0) {
         let currentIndex = 0;
 
-        // Build high-res src from thumb src
         function highResSrc(thumbImg) {
-            // For local images, use the src directly
-            // For Unsplash URLs, swap to high-res width
             const src = thumbImg.src;
             if (src.includes('unsplash.com')) return src.replace('w=300', 'w=1200');
-            return src; // local image — use as-is
+            return src;
         }
 
         function goTo(index) {
-            // Clamp / wrap
             if (index < 0) index = thumbEls.length - 1;
             if (index >= thumbEls.length) index = 0;
             currentIndex = index;
@@ -202,16 +161,13 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        // Thumbnail clicks
         thumbEls.forEach((thumb, i) => {
             thumb.addEventListener('click', () => goTo(i));
         });
 
-        // Arrow clicks
         if (leftArrow)  leftArrow.addEventListener('click',  () => goTo(currentIndex - 1));
         if (rightArrow) rightArrow.addEventListener('click', () => goTo(currentIndex + 1));
 
-        // Keyboard navigation when the carousel is focused
         document.addEventListener('keydown', (e) => {
             if (e.key === 'ArrowLeft')  goTo(currentIndex - 1);
             if (e.key === 'ArrowRight') goTo(currentIndex + 1);
@@ -219,9 +175,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* ==========================================
-       7. Image Zoom on Hover (desktop only)
-       ========================================== */
+    // image zoom on hover - desktop only
     const imageContainer = document.getElementById('main-image-container');
     const zoomContainer  = document.getElementById('zoom-container');
     const lens           = document.getElementById('zoom-lens');
@@ -234,7 +188,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (window.innerWidth <= 1200) return;
             lens.style.display = 'block';
             zoomContainer.style.display = 'block';
-            // Sync background image in case it changed via carousel
             zoomResult.style.backgroundImage = `url('${mainImage.src}')`;
         });
 
@@ -250,14 +203,13 @@ document.addEventListener('DOMContentLoaded', () => {
             let x = e.clientX - rect.left - lens.offsetWidth  / 2;
             let y = e.clientY - rect.top  - lens.offsetHeight / 2;
 
-            // Clamp lens to image bounds
+            // keep lens inside the image
             x = Math.max(0, Math.min(x, rect.width  - lens.offsetWidth));
             y = Math.max(0, Math.min(y, rect.height - lens.offsetHeight));
 
             lens.style.left = `${x}px`;
             lens.style.top  = `${y}px`;
 
-            // Derive background-position from lens position
             const xPct = (x / (rect.width  - lens.offsetWidth))  * 100;
             const yPct = (y / (rect.height - lens.offsetHeight)) * 100;
             zoomResult.style.backgroundPosition = `${xPct}% ${yPct}%`;
@@ -265,9 +217,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* ==========================================
-       8. Contact Page Form
-       ========================================== */
+    // contact form submit
     const contactForm = document.getElementById('contact-page-form');
 
     if (contactForm) {
@@ -288,11 +238,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    /* ==========================================
-       9. Toast Notification Helper
-       ========================================== */
+    // toast notification
     function showToast(message, duration = 4000) {
-        // Remove any existing toast
         const existing = document.getElementById('app-toast');
         if (existing) existing.remove();
 
@@ -319,7 +266,6 @@ document.addEventListener('DOMContentLoaded', () => {
         `;
         document.body.appendChild(toast);
 
-        // Trigger animation
         requestAnimationFrame(() => {
             requestAnimationFrame(() => {
                 toast.style.opacity = '1';
@@ -327,7 +273,6 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        // Auto-dismiss
         setTimeout(() => {
             toast.style.opacity = '0';
             toast.style.transform = 'translateX(-50%) translateY(20px)';
@@ -335,4 +280,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }, duration);
     }
 
-}); // end DOMContentLoaded
+});
